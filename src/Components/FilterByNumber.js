@@ -7,6 +7,8 @@ function FilterByNumber() {
     setFilterNumber,
     planets,
     setFilteredPlanets,
+    appliedFilters,
+    setAppliedFilters,
   } = useContext(PlanetContext);
 
   const handleInputChange = ({ target }) => {
@@ -16,21 +18,34 @@ function FilterByNumber() {
 
   const handleFilter = () => {
     const { column, comparison, value } = filterNumber;
-    const filteredPlanet = planets.filter((planet) => {
-      switch (comparison) {
-      case 'maior que':
-        return Number(planet[column]) > Number(value);
-      case 'menor que':
-        return Number(planet[column]) < Number(value);
-      case 'igual a':
-        return Number(planet[column]) === Number(value);
-      default:
-        return true;
-      }
-    });
+    const newFilter = {
+      column,
+      comparison,
+      value,
+    };
 
+    const updatedFilters = [...appliedFilters, newFilter];
+
+    const filteredPlanet = planets
+      .filter((planet) => updatedFilters
+        .every(({
+          column: filterColumn,
+          comparison: filterComparison,
+          value: filterValue }) => {
+          switch (filterComparison) {
+          case 'maior que':
+            return Number(planet[filterColumn]) > Number(filterValue);
+          case 'menor que':
+            return Number(planet[filterColumn]) < Number(filterValue);
+          case 'igual a':
+            return Number(planet[filterColumn]) === Number(filterValue);
+          default:
+            return true;
+          }
+        }));
+
+    setAppliedFilters(updatedFilters);
     setFilteredPlanets(filteredPlanet);
-    console.log(filteredPlanet);
   };
 
   return (

@@ -12,13 +12,12 @@ function PlanetContextProvider({ children }) {
     value: 0,
   });
   const [filteredPlanets, setFilteredPlanets] = useState([]);
+  const [appliedFilters, setAppliedFilters] = useState([]);
 
   const fetchData = async () => {
     const data = await fetchPlanets();
     setPlanets(data);
   };
-
-  fetchData();
 
   return (
     <PlanetContext.Provider
@@ -30,7 +29,9 @@ function PlanetContextProvider({ children }) {
           setFilterNumber,
           filteredPlanets,
           setFilteredPlanets,
-          fetchData }
+          fetchData,
+          appliedFilters,
+          setAppliedFilters }
       }
     >
       {children}
