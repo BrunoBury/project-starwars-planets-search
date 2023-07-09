@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
 import PlanetContext from '../context/PlanetContext';
 
-function FilterInput() {
+function FilterByText() {
   const { textFilter, setTextFilter } = useContext(PlanetContext);
 
-  const handleInputChange = (event) => {
-    setTextFilter(event.target.value);
+  const handleInputChange = ({ target }) => {
+    setTextFilter(target.value);
   };
 
   return (
@@ -18,4 +18,4 @@ function FilterInput() {
   );
 }
 
-export default FilterInput;
+export default FilterByText;

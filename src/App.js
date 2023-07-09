@@ -1,29 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Table from './Components/Table';
-import PlanetContext from './context/PlanetContext';
-import fetchPlanets from './services/FetchAPI';
-import FilterInput from './Components/Filters';
+import FilterByText from './Components/FilterBytext';
+import FilterByNumber from './Components/FilterByNumber';
 import './App.css';
+import PlanetContextProvider from './context/PlanetProvider';
 
 function App() {
-  const [planets, setPlanets] = useState([]);
-  const [textFilter, setTextFilter] = useState('');
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await fetchPlanets();
-      setPlanets(data);
-    };
-
-    fetchData();
-  }, []);
-
   return (
-    <PlanetContext.Provider value={ { planets, textFilter, setTextFilter } }>
+    <PlanetContextProvider>
       <h1>Planet Filter</h1>
-      <FilterInput />
+      <FilterByText />
+      <FilterByNumber />
       <Table />
-    </PlanetContext.Provider>
+    </PlanetContextProvider>
   );
 }
 

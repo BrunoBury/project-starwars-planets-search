@@ -1,12 +1,17 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import PlanetContext from '../context/PlanetContext';
 
 function Table() {
-  const { planets } = useContext(PlanetContext);
-  const { textFilter } = useContext(PlanetContext);
-  const filterPlanets = planets
-    .filter((planet) => planet.name
-      .toLowerCase().includes(textFilter.toLowerCase()));
+  const { planets, textFilter, filteredPlanets, fetchData } = useContext(PlanetContext);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const filterPlanetsText = planets
+    .filter((planet) => planet.name.toLowerCase().includes(textFilter.toLowerCase()));
+
+  const displayPlanets = filteredPlanets.length > 0 ? filteredPlanets : filterPlanetsText;
 
   return (
     <table>
@@ -29,9 +34,9 @@ function Table() {
       </thead>
       <tbody>
         {
-          filterPlanets.map((planet) => (
+          displayPlanets.map((planet) => (
             <tr key={ planet.name }>
-              <th>{planet.name}</th>
+              <td>{planet.name}</td>
               <td>{planet.rotation_period}</td>
               <td>{planet.orbital_period}</td>
               <td>{planet.diameter}</td>
