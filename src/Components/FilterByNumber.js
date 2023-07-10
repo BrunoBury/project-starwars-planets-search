@@ -48,6 +48,14 @@ function FilterByNumber() {
     setFilteredPlanets(filteredPlanet);
   };
 
+  const availableColumns = [
+    'population',
+    'orbital_period',
+    'diameter',
+    'rotation_period',
+    'surface_water']
+    .filter((column) => !appliedFilters.some((filter) => filter.column === column));
+
   return (
     <div>
       <select
@@ -56,11 +64,9 @@ function FilterByNumber() {
         value={ filterNumber.column }
         onChange={ handleInputChange }
       >
-        <option value="population">population</option>
-        <option value="orbital_period">orbital_period</option>
-        <option value="diameter">diameter</option>
-        <option value="rotation_period">rotation_period</option>
-        <option value="surface_water">surface_water</option>
+        {availableColumns.map((column) => (
+          <option key={ column } value={ column }>{column}</option>
+        ))}
       </select>
       <select
         name="comparison"

@@ -39,7 +39,7 @@ function Table() {
           </span>
         ))}
       </div>
-      <table>
+      <table data-testid="planet-table">
         <thead>
           <tr>
             <th>Name</th>
