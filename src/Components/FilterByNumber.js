@@ -26,26 +26,40 @@ function FilterByNumber() {
 
     const updatedFilters = [...appliedFilters, newFilter];
 
-    const filteredPlanet = planets
-      .filter((planet) => updatedFilters
-        .every(({
-          column: filterColumn,
-          comparison: filterComparison,
-          value: filterValue }) => {
-          switch (filterComparison) {
-          case 'maior que':
-            return Number(planet[filterColumn]) > Number(filterValue);
-          case 'menor que':
-            return Number(planet[filterColumn]) < Number(filterValue);
-          case 'igual a':
-            return Number(planet[filterColumn]) === Number(filterValue);
-          default:
-            return true;
-          }
-        }));
+    const filteredPlanets = planets.filter((planet) => updatedFilters.every((filter) => {
+      const {
+        column: filterColumn,
+        comparison: filterComparison,
+        value: filterValue } = filter;
+      switch (filterComparison) {
+      case 'maior que':
+        return Number(planet[filterColumn]) > Number(filterValue);
+      case 'menor que':
+        return Number(planet[filterColumn]) < Number(filterValue);
+      case 'igual a':
+        return Number(planet[filterColumn]) === Number(filterValue);
+      default:
+        return true;
+      }
+    }));
 
     setAppliedFilters(updatedFilters);
-    setFilteredPlanets(filteredPlanet);
+    setFilteredPlanets(filteredPlanets);
+
+    setFilterNumber({
+      column: 'population',
+      comparison: 'maior que',
+      value: 0,
+    });
+  };
+
+  const removeAllFilters = () => {
+    setAppliedFilters([]);
+    setFilterNumber({
+      column: 'population',
+      comparison: 'maior que',
+      value: 0,
+    });
   };
 
   const availableColumns = [
@@ -53,8 +67,8 @@ function FilterByNumber() {
     'orbital_period',
     'diameter',
     'rotation_period',
-    'surface_water']
-    .filter((column) => !appliedFilters.some((filter) => filter.column === column));
+    'surface_water',
+  ].filter((column) => !appliedFilters.some((filter) => filter.column === column));
 
   return (
     <div>
@@ -65,7 +79,9 @@ function FilterByNumber() {
         onChange={ handleInputChange }
       >
         {availableColumns.map((column) => (
-          <option key={ column } value={ column }>{column}</option>
+          <option key={ column } value={ column }>
+            {column}
+          </option>
         ))}
       </select>
       <select
@@ -92,6 +108,15 @@ function FilterByNumber() {
       >
         Filtrar
       </button>
+      {appliedFilters.length > 0 && (
+        <button
+          type="button"
+          data-testid="button-remove-filters"
+          onClick={ removeAllFilters }
+        >
+          Remover todas as filtragens
+        </button>
+      )}
     </div>
   );
 }

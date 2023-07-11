@@ -2,14 +2,17 @@ import React, { useContext, useEffect } from 'react';
 import PlanetContext from '../context/PlanetContext';
 
 function Table() {
-  const { planets, textFilter, appliedFilters, fetchData } = useContext(PlanetContext);
+  const { planets,
+    textFilter,
+    appliedFilters,
+    setAppliedFilters,
+    fetchData } = useContext(
+    PlanetContext,
+  );
 
   useEffect(() => {
     fetchData();
   }, []);
-
-  const filterPlanetsText = planets
-    .filter((planet) => planet.name.toLowerCase().includes(textFilter.toLowerCase()));
 
   const applyNumericFilters = (data) => appliedFilters.reduce((filteredData, filter) => {
     const { column, comparison, value } = filter;
@@ -27,14 +30,28 @@ function Table() {
     });
   }, data);
 
+  const filterPlanetsText = planets
+    .filter((planet) => planet.name.toLowerCase().includes(textFilter.toLowerCase()));
+
   const displayPlanets = applyNumericFilters(filterPlanetsText);
+
+  const removeFilter = (index) => {
+    const updatedFilters = [...appliedFilters];
+    updatedFilters.splice(index, 1);
+    setAppliedFilters(updatedFilters);
+  };
 
   return (
     <div>
       <div>
         {appliedFilters.map((filter, index) => (
-          <span key={ index }>
+          <span data-testid="filter" key={ index }>
             {`${filter.column} ${filter.comparison} ${filter.value}`}
+            <button
+              onClick={ () => removeFilter(index) }
+            >
+              X
+            </button>
             <br />
           </span>
         ))}
@@ -58,25 +75,23 @@ function Table() {
           </tr>
         </thead>
         <tbody>
-          {
-            displayPlanets.map((planet) => (
-              <tr key={ planet.name }>
-                <td>{planet.name}</td>
-                <td>{planet.rotation_period}</td>
-                <td>{planet.orbital_period}</td>
-                <td>{planet.diameter}</td>
-                <td>{planet.climate}</td>
-                <td>{planet.gravity}</td>
-                <td>{planet.terrain}</td>
-                <td>{planet.surface_water}</td>
-                <td>{planet.population}</td>
-                <td>{planet.films}</td>
-                <td>{planet.created}</td>
-                <td>{planet.edited}</td>
-                <td>{planet.url}</td>
-              </tr>
-            ))
-          }
+          {displayPlanets.map((planet) => (
+            <tr key={ planet.name }>
+              <td>{planet.name}</td>
+              <td>{planet.rotation_period}</td>
+              <td>{planet.orbital_period}</td>
+              <td>{planet.diameter}</td>
+              <td>{planet.climate}</td>
+              <td>{planet.gravity}</td>
+              <td>{planet.terrain}</td>
+              <td>{planet.surface_water}</td>
+              <td>{planet.population}</td>
+              <td>{planet.films}</td>
+              <td>{planet.created}</td>
+              <td>{planet.edited}</td>
+              <td>{planet.url}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
